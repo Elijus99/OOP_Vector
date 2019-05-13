@@ -1,1 +1,2 @@
-# OOP_Vector
+# Vector (aka std::vector) konteinerio kūrimas
+
