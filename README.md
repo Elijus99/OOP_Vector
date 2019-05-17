@@ -1,5 +1,13 @@
 # Vector (aka std::vector) konteinerio kūrimas
 
+## Įdiegimas (Unix kompiuteryje) naudojant `Clang` kompiliatorių  ir paleidimas
+
+- `git clone https://github.com/Elijus99/OOP_Vector.git`
+- `cd OOP_Vector`
+- `make`
+- `make test`
+
+
 ## Push_back spartos analizė
 ```
 Inserted 10000 elements:
