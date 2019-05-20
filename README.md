@@ -12,35 +12,35 @@
 ```
 Inserted 10000 elements:
 std::vector: 0.0001 s
-Vector: 0.0000 s
+Vector: 0.0001 s
 Inserted 100000 elements:
-std::vector: 0.0006 s
-Vector: 0.0003 s
+std::vector: 0.0009 s
+Vector: 0.0006 s
 Inserted 1000000 elements:
-std::vector: 0.0097 s
-Vector: 0.0071 s
+std::vector: 0.0084 s
+Vector: 0.0080 s
 Inserted 10000000 elements:
-std::vector: 0.1096 s
-Vector: 0.0860 s
+std::vector: 0.1036 s
+Vector: 0.0924 s
 Inserted 100000000 elements:
-std::vector: 1.1527 s
-Vector: 0.6999 s
+std::vector: 1.2720 s
+Vector: 0.9193 s
 ```
 ## Reallocations
 ```
 Reallocations while inserting 10000 elements:
 std::vector: 23
-Vector: 12
+Vector: 20
 Reallocations while inserting 100000 elements:
 std::vector: 29
-Vector: 15
+Vector: 26
 Reallocations while inserting 1000000 elements:
 std::vector: 34
-Vector: 18
+Vector: 31
 Reallocations while inserting 10000000 elements:
 std::vector: 40
-Vector: 22
+Vector: 37
 Reallocations while inserting 100000000 elements:
 std::vector: 46
-Vector: 25
+Vector: 43
 ```
