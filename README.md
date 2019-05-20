@@ -7,7 +7,6 @@
 - `make`
 - `make test`
 
-## Vector funkcijos
 
 ### Member types
 
