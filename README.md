@@ -123,6 +123,80 @@ bool operator<= (const Vector<T>& rhs);
 bool operator>= (const Vector<T>& rhs);
 ```
 
+### Funkcijų pavyzdžiai
+
+``` c++
+void reserve(size_type new_capacity) {
+        if (new_capacity > capacity_) {
+            capacity_ = new_capacity;
+            auto newElem = allocator.allocate(capacity_);
+            std::move(elem, elem + size_, newElem);
+            allocator.destroy(elem);
+            elem = newElem;
+        }
+}
+```
+
+``` c++
+void clear() {
+        for (size_t i = 0; i < size_; i++) {
+            allocator.destroy(elem + i);
+        }
+        size_ = 0;
+}
+```
+
+``` c++
+iterator insert(const_iterator pos, size_type count, const T& value) {
+        auto index = pos - begin();
+        iterator it = &elem[index];
+        if (count == 0) return it;
+        if (size_ + count > capacity_)
+        {
+            capacity_ = (size_ + count)*1.5;
+            reserve(capacity_);
+        }
+        std::move(it, end(), it+count);
+        size_ += count;
+        for (size_t i = 0; i < count; i++) {
+            *(it+i) = value;
+        }
+        return it;
+}
+```
+
+``` c++
+iterator erase(iterator pos) {
+        auto* newElem = allocator.allocate(capacity_);
+        size_t index = 0;
+        for (auto i = begin(); i < pos; i++) {
+            newElem[index] = *i;
+            index++;
+        }
+        for (auto i = pos; i < end(); i++) {
+            newElem[index] = *(i + 1);
+            index++;
+        }
+        allocator.destroy(elem);
+        elem = newElem;
+        size_--;
+        return pos;
+}
+```
+
+``` c++
+void push_back(const T& value) {
+        if (size() == capacity()) {
+            capacity_ = (capacity_ + 1) * 1.5;
+            auto* newElem = allocator.allocate(capacity_);
+            std::move(elem, elem + size_, newElem);
+            allocator.destroy(elem);
+            elem = newElem;
+        }
+        elem[size_++] = value;
+}
+```
+
 ## Push_back spartos analizė
 ```
 Inserted 10000 elements:
