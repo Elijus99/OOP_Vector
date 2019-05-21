@@ -29,7 +29,7 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
     //Member functions
     //Constructors
-    Vector() : size_(0), capacity_(0), elem(new T[capacity_]) {};
+    Vector() : size_(0), capacity_(0) { elem = allocator.allocate(capacity_); };
     Vector(size_type count) : size_(count), capacity_(count) {
         elem = allocator.allocate(capacity_);
         std::fill_n(elem, count, 0.0);
@@ -102,6 +102,7 @@ public:
         for (size_t i = 0; i < count; i++) {
             elem[i] = value;
         }
+        size_ = count;
     };
     template <typename InputIt>
     void assign(InputIt first, InputIt last) {
@@ -165,7 +166,7 @@ public:
     const_reverse_iterator rend() const noexcept { return const_reverse_iterator(elem); }
     reverse_iterator crend() const noexcept { return reverse_iterator(elem); }
     //Capacity
-    bool empty() const { if (size_ == 0) { return true; } }
+    bool empty() const { if (size_ == 0) { return true; } else return false; }
     size_type size() const { return size_; }
     size_type max_size() const noexcept { return SIZE_MAX; }
     void reserve(size_type new_capacity) {
@@ -181,9 +182,9 @@ public:
     void shrink_to_fit() { capacity_ = size_; }
     //Modifiers
     void clear() {
-        auto newElem = new T[0];
-        delete[] elem;
-        elem = newElem;
+        for (size_t i = 0; i < size_; i++) {
+            allocator.destroy(elem + i);
+        }
         size_ = 0;
     }
     iterator insert(const_iterator pos, const T& value) {
