@@ -22,7 +22,9 @@ int main()
     runPushback(B, 10000000, loc2[3]);
     cout << "Inserted 100000000 elements:" << endl;
     runPushback(A, 100000000, loc1[4]);
+    A.clear();
     runPushback(B, 100000000, loc2[4]);
+    B.clear();
     cout << "\nRealocations:" << endl;
     cout << "Reallocations while inserting 10000 elements:" << endl;
     cout << "std::vector: " << loc1[0] << endl;
@@ -39,6 +41,6 @@ int main()
     cout << "Reallocations while inserting 100000000 elements:" << endl;
     cout << "std::vector: " << loc1[4] << endl;
     cout << "Vector: " << loc2[4] << endl;
-
+    system("pause");
     return 0;
 }

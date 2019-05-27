@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <iostream>
 
 template <typename T, class Allocator = std::allocator<T>>
 class Vector
@@ -67,8 +68,13 @@ public:
     }
     //Deconstructor
     ~Vector() {
-        allocator.destroy(elem);
-        elem = nullptr;
+        if (elem != nullptr) {
+            for (size_t i = 0; i < size_; i++) {
+                allocator.destroy(&elem[i]);
+            }
+            allocator.deallocate(elem, capacity_);
+            elem = nullptr;
+        }
     };
     //Operator=
     Vector& operator=(const Vector& other) {
@@ -171,11 +177,14 @@ public:
     size_type max_size() const noexcept { return SIZE_MAX; }
     void reserve(size_type new_capacity) {
         if (new_capacity > capacity_) {
-            capacity_ = new_capacity;
-            auto newElem = allocator.allocate(capacity_);
-            std::move(elem, elem + size_, newElem);
-            allocator.destroy(elem);
+            auto newElem = allocator.allocate(new_capacity);
+            for (size_t i = 0; i < size_; i++) {
+                allocator.construct(&newElem[i], std::move(elem[i]));
+                allocator.destroy(&elem[i]);
+            }
+            allocator.deallocate(elem, capacity_);
             elem = newElem;
+            capacity_ = new_capacity;
         }
     };
     size_t capacity() const { return capacity_; }
@@ -183,7 +192,7 @@ public:
     //Modifiers
     void clear() {
         for (size_t i = 0; i < size_; i++) {
-            allocator.destroy(elem + i);
+            allocator.destroy(data() + i);
         }
         size_ = 0;
     }
@@ -286,11 +295,14 @@ public:
             newElem[index] = *(i + 1);
             index++;
         }
-        allocator.destroy(elem);
+        for (size_t i = 0; i < capacity_; i++) {
+            allocator.destroy(&elem[i]);
+        }
+        allocator.deallocate(elem, capacity_);
         elem = newElem;
         size_--;
         return pos;
-    };
+    }
     iterator erase(iterator first, iterator last) {
         auto* newElem = allocator.allocate(capacity_);
         auto diff = last - first;
@@ -303,39 +315,47 @@ public:
             newElem[index] = *i;
             index++;
         }
-        allocator.destroy(elem);
+        for (size_t i = 0; i < capacity_; i++) {
+            allocator.destroy(&elem[i]);
+        }
+        allocator.deallocate(elem, capacity_);
         elem = newElem;
         size_ -= diff;
         return first;
     };
     void push_back(const T& value) {
         if (size() == capacity()) {
-            capacity_ = (capacity_ + 1) * 1.5;
-            auto* newElem = allocator.allocate(capacity_);
-            std::move(elem, elem + size_, newElem);
-            allocator.destroy(elem);
+            size_t newCap = (capacity_ + 1) * 1.5;
+            auto* newElem = allocator.allocate(newCap);
+            for(size_t i = 0; i < size_; i++) {
+                allocator.construct(&newElem[i], std::move(elem[i]));
+                allocator.destroy(&elem[i]);
+            }
+            allocator.deallocate(elem, capacity());
             elem = newElem;
+            capacity_ = newCap;
         }
-        elem[size_++] = value;
+        allocator.construct(end(), value);
+        size_++;
     };
     void push_back(T&& value) {
         if (size() == capacity()) {
-            capacity_ = (capacity_ + 1) * 1.5;
-            auto* newElem = allocator.allocate(capacity_);
-            std::move(elem, elem + size_, newElem);
-            allocator.destroy(elem);
+            size_t newCap = (capacity_ + 1) * 1.5;
+            auto* newElem = allocator.allocate(newCap);
+            for (size_t i = 0; i < size_; i++) {
+                allocator.construct(&newElem[i], std::move(elem[i]));
+                allocator.destroy(&elem[i]);
+            }
+            allocator.deallocate(elem, capacity());
             elem = newElem;
+            capacity_ = newCap;
         }
-        elem[size_++] = std::move(value);
+        allocator.construct(end(), std::move(value));
+        size_++;
     };
     void pop_back() {
         size_--;
-        auto* newElem = allocator.allocate(capacity_);
-        for (size_t i = 0; i < size_; i++) {
-            newElem[i] = elem[i];
-        }
-        allocator.destroy(elem);
-        elem = newElem;
+        allocator.destroy(end() - 1);
     };
     void resize(size_type count) {
         if (capacity_ < count) {
@@ -348,8 +368,12 @@ public:
         for (size_t i = size_; i < count; i++) {
             newElem[i] = 0;
         }
+        for (size_t i = 0; i < size_; i++) {
+            allocator.construct(&newElem[i], std::move(elem[i]));
+            allocator.destroy(&elem[i]);
+        }
+        allocator.deallocate(elem, capacity_);
         size_ = count;
-        allocator.destroy(elem);
         elem = newElem;
     };
     void resize(size_type count, const T& value) {
@@ -363,8 +387,12 @@ public:
         for (size_t i = size_; i < count; i++) {
             newElem[i] = value;
         }
+        for (size_t i = 0; i < size_; i++) {
+            allocator.construct(&newElem[i], std::move(elem[i]));
+            allocator.destroy(&elem[i]);
+        }
+        allocator.deallocate(elem, capacity_);
         size_ = count;
-        allocator.destroy(elem);
         elem = newElem;
     };
     void swap(Vector& other) {
