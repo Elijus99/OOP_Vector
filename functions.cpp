@@ -8,7 +8,7 @@ void runPushback(std::vector<int> A, size_t n, int& loc) {
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
-    cout << "std::vector: " << std::fixed << std::setprecision(4) << diff.count() << " s" << endl;
+    cout << "std::vector: " << std::fixed << std::setprecision(4) << diff.count() << " s, capacity: " << A.capacity() << endl;
 }
 void runPushback(Vector<int> A, size_t n, int& loc) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -18,5 +18,5 @@ void runPushback(Vector<int> A, size_t n, int& loc) {
     }
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> diff = end - start;
-    cout << "Vector: " << std::fixed << std::setprecision(4) << diff.count() << " s" << endl;
+    cout << "Vector: " << std::fixed << std::setprecision(4) << diff.count() << " s, capacity: " << A.capacity() << endl;
 }
