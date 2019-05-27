@@ -199,21 +199,22 @@ void push_back(const T& value) {
 
 ## Push_back spartos analizė
 ```
+Push_back:
 Inserted 10000 elements:
 std::vector: 0.0001 s
 Vector: 0.0001 s
 Inserted 100000 elements:
-std::vector: 0.0009 s
-Vector: 0.0006 s
+std::vector: 0.0008 s
+Vector: 0.0010 s
 Inserted 1000000 elements:
-std::vector: 0.0084 s
-Vector: 0.0080 s
+std::vector: 0.0119 s
+Vector: 0.0117 s
 Inserted 10000000 elements:
-std::vector: 0.1036 s
-Vector: 0.0924 s
+std::vector: 0.1327 s
+Vector: 0.1209 s
 Inserted 100000000 elements:
-std::vector: 1.2720 s
-Vector: 0.9193 s
+std::vector: 1.2742 s
+Vector: 1.1476 s
 ```
 ## Reallocations
 ```
