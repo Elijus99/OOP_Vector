@@ -1,13 +1,14 @@
 #include <vector>
 #include "vector.h"
 #include "functions.h"
+#include "StudentDerived.h"
 
 int main()
 {
     std::vector<int> A;
     Vector<int> B;
     int loc1[5] = {0, 0, 0, 0, 0}, loc2[5] = { 0, 0, 0, 0, 0 };
-    cout << "Push_back:" << endl;
+    cout << "Push_back(int):" << endl;
     cout << "Inserted 10000 elements:" << endl;
     runPushback(A, 10000, loc1[0]);
     A.clear();
@@ -49,6 +50,33 @@ int main()
     cout << "Reallocations while inserting 100000000 elements:" << endl;
     cout << "std::vector: " << loc1[4] << endl;
     cout << "Vector: " << loc2[4] << endl;
+
+    std::vector<StudentDerived> C;
+    Vector<StudentDerived> D;
+    StudentDerived x;
+    x.setVardas("Vardas");
+    x.setPav("Pavarde");
+    Vector<int> nd{ 1, 1, 1, 1, 1 };
+    x.setNd(nd);
+    x.setEgz(1);
+    x.setGal(1);
+
+    cout << "Push_back(Studentai):" << endl;
+    cout << "Inserted 10000 elements:" << endl;
+    runPushback(C, x, 10000);
+    C.clear();
+    runPushback(D, x, 10000);
+    D.clear();
+    cout << "Inserted 100000 elements:" << endl;
+    runPushback(C, x, 100000);
+    C.clear();
+    runPushback(D, x, 100000);
+    D.clear();
+    cout << "Inserted 1000000 elements:" << endl;
+    runPushback(C, x, 1000000);
+    C.clear();
+    runPushback(D, x, 1000000);
+    D.clear();
     system("pause");
     return 0;
 }
